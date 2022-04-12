@@ -74,12 +74,12 @@ class ClusterManager<T extends ClusterItem> {
   }
 
   /// Method called on map update to update cluster. Can also be manually called to force update.
-  void updateMap() {
-    _updateClusters();
+  void updateMap({LatLngBounds? mapBounds}) {
+    _updateClusters(mapBounds: mapBounds);
   }
 
-  void _updateClusters() async {
-    List<Cluster<T>> mapMarkers = await getMarkers();
+  void _updateClusters({LatLngBounds? mapBounds}) async {
+    List<Cluster<T>> mapMarkers = await getMarkers(mapBounds: mapBounds);
 
     final Set<Marker> markers =
         Set.from(await Future.wait(mapMarkers.map((m) => markerBuilder(m))));
