@@ -108,17 +108,18 @@ class ClusterManager<T extends ClusterItem> {
   }
 
   /// Retrieve cluster markers
-  Future<List<Cluster<T>>> getMarkers() async {
+  Future<List<Cluster<T>>> getMarkers({LatLngBounds? mapBounds}) async {
     if (_mapId == null) return List.empty();
 
-    final LatLngBounds mapBounds = await GoogleMapsFlutterPlatform.instance
+    final LatLngBounds mapBoundsFullMap = await GoogleMapsFlutterPlatform
+        .instance
         .getVisibleRegion(mapId: _mapId!);
 
     late LatLngBounds inflatedBounds;
     if (clusterAlgorithm == ClusterAlgorithm.GEOHASH) {
-      inflatedBounds = _inflateBounds(mapBounds);
+      inflatedBounds = _inflateBounds(mapBounds ?? mapBoundsFullMap);
     } else {
-      inflatedBounds = mapBounds;
+      inflatedBounds = mapBounds ?? mapBoundsFullMap;
     }
 
     List<T> visibleItems = items.where((i) {
